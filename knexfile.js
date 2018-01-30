@@ -3,8 +3,13 @@
 module.exports = {
 
   development: {
-    client: 'postgresql',
-    connection: 'postgres://localhost/CRUD'
-
+    client: 'pg',
+    connection: 'postgres://localhost/CRUD',
+    migrations: {
+        directory: __dirname + '/migrations'
+    },
+    seeds: {
+        directory: __dirname + '/seeds'
+    }
   }
 }

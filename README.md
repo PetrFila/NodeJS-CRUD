@@ -1,4 +1,4 @@
-* this guide assumes that Postres database server is already installed and running
+* this guide assumes that Postgres database server is already installed and running
 
 ## Generating Node JS app with Express
 
@@ -9,9 +9,9 @@
 - in the root directory of the application run touch .gitignore - This will create that a file in which we can store other files's names to be ignored when pushing to git/github
 
 - run `createdb` and a name of the database
-** `dropdb` + the name will delete the database
-** if you accidentally don't assign any name you can run `psql` and it will open the last created database showing the name of the database
-** `\q`  will quit the database
+\\ `dropdb` + the name will delete the database
+\\ if you accidentally don't assign any name you can run `psql` and it will open the last created database showing the name of the database
+\\ `\q`  will quit the database
 
 
 ## Adding KNEX JS and Postgres to the app and creating connection between those modules
@@ -22,16 +22,22 @@
 - in the app root directory create a new file "knexfile.js"
 - create following object inside of the file  
 ```
-  module.exports = {
-    development: {
-      client: 'postgresql',
-      connection: 'postgres://localhost/CRUD'
-      }
+module.exports = {
+
+  development: {
+    client: 'pg',
+    connection: 'postgres://localhost/CRUD',
+    migrations: {
+        directory: __dirname + '/migrations'
+    },
+    seeds: {
+        directory: __dirname + '/seeds'
     }
   }
+}
 ```
 
-### ERD and migration file
+### ERD, migration file and seed file
 
 ![](https://j3qtcg.dm2302.livefilestore.com/y4mB-uM06o9N8uV3TFVkxIUQg11vVHoeHhjGCtTWwJu82w2Gc5YP474W0cJVNMv3AJ5oZyRozMsBc-ZIDNWL5dLp2cEQ0C6JjmxEtqOhkoOV-Pxafw0wcJInR07QVEOYsltsLiuMJLd-bvL5F2arhGLCFrao-2S5dtqyIzsxHQgl6JBhCRojX0bvXu9Ot94tM9w7empYU2yiczHe2krMYqnRQ?width=328&height=323&cropmode=none)
 
@@ -40,3 +46,11 @@
 - run `knex migrate:latest` for the migration
 - checkout the new table in the database `psql nameOfTheDatabase` and then `\dt` to display tables
 - `\d tableName` will display the structure of the table
+
+
+#### Seed file
+
+- run `knex seed:make 01_sticker` It's a good practice to name the seed files with numbers as they run in alphabetical order
+- created a file 'stickers.js' and pasted sample data in it as an array of JSON objects. This array is exported to '01_sticker.js' file
+- migrate the seed data to the database `knex seed:run`
+- checkout the database same as before plus use SQL query `SELECT * FROM sticker;` (where sticker is the table name)
