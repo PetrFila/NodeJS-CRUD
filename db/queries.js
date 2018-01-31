@@ -6,6 +6,6 @@ const knex = require('./knex') //requiring connection from the knex.js
 //this module contains queries to manipulate the database
 module.exports = {
   getAll() {
-
+    return knex('sticker');
   }
 }

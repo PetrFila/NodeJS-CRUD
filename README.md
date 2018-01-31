@@ -136,3 +136,30 @@ module.exports = connection;
 ```
 
 - create a new file 'queries.js' inside the db folder
+- paste there following code including those comments to help you understand what the code is about:
+```
+//this is a query file to be used for CRUDing against the database
+
+const knex = require('./knex') //requiring connection from the knex.js
+
+
+//this module contains queries to manipulate the database
+module.exports = {
+  getAll() {
+    return knex('sticker');
+  }
+}
+```
+
+- go to stickers.js file and replace the GET request with following code:
+```
+router.get('/', (req, res) => {
+  queries.getAll()
+  .then(stickers => {
+    res.json(stickers);
+  })
+
+})
+```
+
+- refresh your webpage. It should display data from the database
