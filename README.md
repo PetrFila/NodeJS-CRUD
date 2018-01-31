@@ -9,9 +9,9 @@
 - in the root directory of the application run touch .gitignore - This will create that a file in which we can store other files's names to be ignored when pushing to git/github
 
 - run `createdb` and a name of the database
-\\ `dropdb` + the name will delete the database
-\\ if you accidentally don't assign any name you can run `psql` and it will open the last created database showing the name of the database
-\\ `\q`  will quit the database
+- `dropdb` + the name will delete the database
+- if you accidentally don't assign any name you can run `psql` and it will open the last created database showing the name of the database
+- `\q`  will quit the database
 
 
 ## Adding KNEX JS and Postgres to the app and creating connection between those modules
@@ -54,3 +54,66 @@ module.exports = {
 - created a file 'stickers.js' and pasted sample data in it as an array of JSON objects. This array is exported to '01_sticker.js' file
 - migrate the seed data to the database `knex seed:run`
 - checkout the database same as before plus use SQL query `SELECT * FROM sticker;` (where sticker is the table name)
+
+
+### Setting up Express server and API
+
+- remove view rendering from app.js
+- remove entire view folder
+- remove routes folder
+- remove static serve from app.js
+- remove public folder
+- remove jade from package.json `npm uninstall jade`
+- update error handler in app.js
+
+```
+// error handler
+app.use(function(err, req, res, next) {
+
+  // render the error message
+  res.status(err.status || 500);
+  res.json({
+    message: err.message,
+    error: req.app.get('env') === 'development' ? err : {}
+  });
+});
+```
+- run `npm install` to make sure all remaining packages are installed
+- run `npm start` to start the application
+- in the browser, open `localhost:3000` and you should see following message:
+```
+{
+  message: "Not Found",
+  error: {
+    status: 404
+  }
+}
+```
+
+- create a new folder in the app root directory called 'api'
+- inside of the new folder create a new file called 'stickers.js'
+- add the following code to the new file:
+```
+const express = require('express');
+
+
+const router = express.Router();
+
+router.get('/', (req, res) => {
+  res.json({
+    message: '👽'
+  })
+})
+
+module.exports = router;
+```
+
+- add following code to your app.js :
+```
+const stickers = require('./api/stickers')
+
+app.use('/api/v1/stickers', stickers) //this goes between middleware and error catcher codes
+```
+
+- install nodemon for development only `npm install nodemon --save-dev`
+- inside of the package.json add following line `"dev": "nodemon"` to the scripts section, after the start option
