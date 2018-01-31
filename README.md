@@ -211,3 +211,124 @@ describe('CRUD Stickers', () => {
 ```
 - run the test again
 - check the database as well
+- modify the console.log that it prints out the database content
+- create a new file inside of the test folder called 'fixtures.js' and paste the console.log output there so the file looks like this:
+```
+const stickers = [
+  { id: 1,
+    title: 'JavaScript',
+    description: 'JS Logo',
+    rating: 10,
+    url: 'http://devstickers.com/assets/img/pro/i4eg.png' },
+  { id: 2,
+    title: 'Rainbow JavaScript',
+    description: 'JS Logo with Rainbow',
+    rating: 10,
+    url: 'http://devstickers.com/assets/img/pro/mw2g.png' },
+  { id: 3,
+    title: 'ES6',
+    description: 'ES6 Logo',
+    rating: 7,
+    url: 'http://devstickers.com/assets/img/pro/i0dq.png' },
+  { id: 4,
+    title: 'JavaScript Beer',
+    description: 'JS Beer Logo',
+    rating: 7,
+    url: 'http://devstickers.com/assets/img/pro/m539.png' },
+  { id: 5,
+    title: 'node.js hexagon',
+    description: 'node.js hexagon logo',
+    rating: 9,
+    url: 'http://devstickers.com/assets/img/pro/iuw5.png' },
+  { id: 6,
+    title: 'node.js solid hexagon',
+    description: 'node.js solid hexagon logo',
+    rating: 8,
+    url: 'http://devstickers.com/assets/img/pro/kh7x.png' },
+  { id: 7,
+    title: 'npm cube',
+    description: 'npm logo in cube',
+    rating: 6,
+    url: 'http://devstickers.com/assets/img/pro/nrc3.png' },
+  { id: 8,
+    title: 'chai',
+    description: 'chai.js logo',
+    rating: 6,
+    url: 'http://devstickers.com/assets/img/pro/5awx.png' },
+  { id: 9,
+    title: 'mocha',
+    description: 'mocha.js logo',
+    rating: 7,
+    url: 'http://devstickers.com/assets/img/pro/4gem.png' }
+  ]
+
+
+module.exports = {
+  stickers
+}
+
+```
+
+- update the 'it' part of the 'app.test.js' file
+
+```
+it('Displays all stickers', (done) => {
+  request(app)
+    .get('/api/v1/stickers')
+    .set('Accept', 'application/json')
+    .expect(200)
+    .then((response) => {
+      expect(response.body).to.be.a('array');
+      expect(response.body).to.deep.equal(fixtures.stickers)
+      done();
+    })
+
+});
+
+```
+- run the test again
+
+### Showing one record with GET request
+
+- add new route to the api's 'sticker.js'
+```
+router.get('/:id', isValidId, (req,res) => {
+  res.json({
+    message: 'Hello!'
+  })
+})
+```
+- and a middleware above those two routes
+```
+function isValidId(req, res, next) {
+  if(!isNaN(req.params.id))
+    return next()
+  next(new Error('Invalid ID'))
+}
+```
+- run the link in the browser and add a number on the end (it should work) and then some letters (it should show an error message)
+- modify the new router.get like this:
+```
+router.get('/:id', isValidId, (req,res, next) => {
+  queries.getOne(req.params.id)
+  .then(sticker => {
+    if(sticker) {
+      res.json(sticker)
+    }
+    else {
+      next()
+    }
+  })
+})
+```
+- modify queries.js in the db folder:
+```
+module.exports = {
+  getAll() {
+    return knex('sticker');
+  },
+  getOne(id) {
+    return knex('sticker').where('id', id).first(); //.first only returns one row
+  }
+  ```
+- testing the new functionality
