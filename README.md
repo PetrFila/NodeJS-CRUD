@@ -117,3 +117,22 @@ app.use('/api/v1/stickers', stickers) //this goes between middleware and error c
 
 - install nodemon for development only `npm install nodemon --save-dev`
 - inside of the package.json add following line `"dev": "nodemon"` to the scripts section, after the start option
+
+### Creating database connection file
+##### The idea behind the following code is that the app will use different database no matter what environment it is on. That means it will use a local database when on a local machine and a dedicated database from another hosting provider when deployed.
+
+- create a new folder called 'db'
+- inside of the new folder create a new file 'knex.js'
+- paste there following code:
+```
+const environment = process.env.NODE_ENV || 'development';
+const knex = require('knex');
+const config = require('../knexfile');
+const environmentConfig = config[environment];
+const connection = knex(environmentConfig)
+
+module.exports = connection;
+
+```
+
+- create a new file 'queries.js' inside the db folder
