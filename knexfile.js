@@ -11,5 +11,15 @@ module.exports = {
     seeds: {
         directory: __dirname + '/seeds'
     }
+  },
+  test: {
+    client: 'pg',
+    connection: 'postgres://localhost/testCRUD',
+    migrations: {
+        directory: __dirname + '/migrations'
+    },
+    seeds: {
+        directory: __dirname + '/seeds'
+    }
   }
 }

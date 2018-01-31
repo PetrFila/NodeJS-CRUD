@@ -163,3 +163,51 @@ router.get('/', (req, res) => {
 ```
 
 - refresh your webpage. It should display data from the database
+
+### Testing
+
+- install libraries for testing `npm install --save-dev mocha chai supertest`
+- update 'knexfile.js' by adding additional environment:
+```
+test: {
+  client: 'pg',
+  connection: 'postgres://localhost/testCRUD',
+  migrations: {
+      directory: __dirname + '/migrations'
+  },
+  seeds: {
+      directory: __dirname + '/seeds'
+  }
+}
+```
+- create a new folder called Test
+- inside of the new folder create a new file 'app.test.js'
+- paste there following:
+```
+describe('CRUD Stickers', () => {
+
+});
+```
+- update your 'package.json' by adding `"test": "mocha"` in to scripts
+- try to run the test by using `npm test` command
+- if it works update your package.json test script like this `"(dropdb --if-exists testCRUD && createdb testCRUD) && NODE_ENV=test mocha"` and run the test again
+- update the app.test.js file:
+```
+describe('CRUD Stickers', () => {
+  before((done) => {
+    //run migrations
+    knex.migrate.latest()
+    .then(() => {
+      //run seeds
+      return knex.seed.run()
+    }).then(() => done());
+
+  });
+
+  it('Works...', () => {
+    console.log("It's working!")
+  });
+});
+```
+- run the test again
+- check the database as well
