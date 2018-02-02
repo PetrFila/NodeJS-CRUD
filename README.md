@@ -358,3 +358,38 @@ it('Displays another sticker by different id', (done) => {
     })
 });
 ```
+
+
+### Saving - adding a new sticker to the database
+
+- add new route to the api/stickers.js file
+```
+router.post('/',  (req, res, next) => {
+    if(validSticker(req.body)) {
+      //save it to the database
+      queries.create(req.body)
+      .then((sticker) => {
+        res.status(201).json(sticker[0])
+      })
+
+
+    } else {
+      //display error
+      next(new Error('Invalid sticker'));
+    }
+})
+```
+- also add new validation function checking for the correct input data:
+```
+function validSticker(sticker){
+  const hasTitle = typeof sticker.title == 'string' && sticker.title.trim()!= '';
+  const hasURL = typeof sticker.url == 'string' && sticker.url.trim()!= '';
+  return hasTitle && hasURL
+}
+```
+- add a new query to the db/queries.js
+```
+create(sticker) {
+  return knex('sticker').insert(sticker,'*')
+}
+```

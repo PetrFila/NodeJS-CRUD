@@ -10,5 +10,9 @@ module.exports = {
   },
   getOne(id) {
     return knex('sticker').where('id', id).first(); //.first only returns one row
+  },
+  //creates a new instance in the database and returns array of stickers
+  create(sticker) {
+    return knex('sticker').insert(sticker,'*')
   }
 }
