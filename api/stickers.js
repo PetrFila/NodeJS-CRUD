@@ -67,26 +67,16 @@ router.put('/:id', isValidId, (req, res, next) => {
     //display error
     next(new Error('Invalid sticker'));
   }
-
 })
 
 
 //DELETE request
 router.delete('/:id', isValidId, (req, res) => {
-  console.log(req.body)
-  if(validSticker(req.body)) {
-    //update sticker
-    queries.delete(req.params.id)
-    .then((sticker) => {
-      res.json({
-        deleted: true
-      })
+  queries.delete(req.params.id).then(() => {
+    res.json({
+      deleted: true
     })
-  } else {
-    //display error
-    next(new Error('Invalid sticker'));
-  }
-
+  })
 })
 
 module.exports = router;

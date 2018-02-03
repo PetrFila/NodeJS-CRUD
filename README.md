@@ -477,23 +477,15 @@ it('Updates a record', (done) => {
 - add a new route to the apu/stickers.js
 
 ```
-/DELETE request
+//DELETE request
 router.delete('/:id', isValidId, (req, res) => {
-  console.log(req.body)
-  if(validSticker(req.body)) {
-    //update sticker
-    queries.delete(req.params.id)
-    .then((sticker) => {
-      res.json({
-        deleted: true
-      })
+  queries.delete(req.params.id).then(() => {
+    res.json({
+      deleted: true
     })
-  } else {
-    //display error
-    next(new Error('Invalid sticker'));
-  }
-
+  })
 })
+
 ```
 - create a new query in the db/queries.js
 ```
@@ -501,4 +493,23 @@ delete(id) {
 //go to the sticker table where requested ID is equal to the ID in the table and delete that
   return knex('sticker').where('id', id).del()
 }
+```
+
+#### Testing the delete functionality
+- add new test to the app.test.js
+```
+it('Deletes a record', (done) => {
+  request(app)
+  .delete('/api/v1/stickers/10')
+  .set('Accept', 'application/json')
+  .expect('Content-Type', /json/)
+  .expect(200)
+  .then((response) => {
+    expect(response.body).to.be.a('object')
+    expect(response.body).to.deep.equal({
+      deleted: true
+    })
+    done()
+  })
+})
 ```
