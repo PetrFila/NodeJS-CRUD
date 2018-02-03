@@ -18,5 +18,9 @@ module.exports = {
   update(id, sticker) {
     //return a sticker where the requested ID is equal to the ID in the database, update that record and return the entire database as an array
     return knex('sticker').where('id', id).update(sticker, '*')
+  },
+  delete(id) {
+  //go to the sticker table where requested ID is equal to the ID in the table and delete that
+    return knex('sticker').where('id', id).del()
   }
 }

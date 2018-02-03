@@ -394,7 +394,7 @@ create(sticker) {
 }
 ```
 
-##### Testing the POST - saving data functionality
+#### Testing the POST - saving data functionality
 - create a new input mock data in the test/fixtures.js and update the export as well
 ```
 const sticker =  
@@ -454,7 +454,7 @@ update(id, sticker) {
 }
 ```
 
-##### Testing the update functionality
+#### Testing the update functionality
 - add new test to the app.test.js
 ```
 it('Updates a record', (done) => {
@@ -471,4 +471,34 @@ it('Updates a record', (done) => {
     done()
   })
 })
+```
+
+### DELETE a record in the database by ID by using DELETE request
+- add a new route to the apu/stickers.js
+
+```
+/DELETE request
+router.delete('/:id', isValidId, (req, res) => {
+  console.log(req.body)
+  if(validSticker(req.body)) {
+    //update sticker
+    queries.delete(req.params.id)
+    .then((sticker) => {
+      res.json({
+        deleted: true
+      })
+    })
+  } else {
+    //display error
+    next(new Error('Invalid sticker'));
+  }
+
+})
+```
+- create a new query in the db/queries.js
+```
+delete(id) {
+//go to the sticker table where requested ID is equal to the ID in the table and delete that
+  return knex('sticker').where('id', id).del()
+}
 ```
