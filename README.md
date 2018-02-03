@@ -450,6 +450,25 @@ router.put('/:id', isValidId, (req, res, next) => {
 ```
 update(id, sticker) {
   //return a sticker where the requested ID is equal to the ID in the database and update that record
-  return knex('sticker').where('id', id).update(sticker)
+  return knex('sticker').where('id', id).update(sticker, '*')
 }
+```
+
+##### Testing the update functionality
+- add new test to the app.test.js
+```
+it('Updates a record', (done) => {
+  fixtures.sticker.rating = 5 //updating the rating
+  request(app)
+  .put('/api/v1/stickers/10')
+  .send(fixtures.sticker)
+  .set('Accept', 'application/json')
+  .expect('Content-Type', /json/)
+  .expect(201)
+  .then((response) => {
+    expect(response.body).to.be.a('object')
+    expect(response.body).to.deep.equal(fixtures.sticker)
+    done()
+  })
+})
 ```

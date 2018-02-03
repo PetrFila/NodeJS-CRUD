@@ -66,4 +66,19 @@ describe('CRUD Stickers', () => {
     })
   })
 
+  it('Updates a record', (done) => {
+    fixtures.sticker.rating = 5 //updating the rating
+    request(app)
+    .put('/api/v1/stickers/10')
+    .send(fixtures.sticker)
+    .set('Accept', 'application/json')
+    .expect('Content-Type', /json/)
+    .expect(201)
+    .then((response) => {
+      expect(response.body).to.be.a('object')
+      expect(response.body).to.deep.equal(fixtures.sticker)
+      done()
+    })
+  })
+
 });
