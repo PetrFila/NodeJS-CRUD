@@ -8,11 +8,13 @@ function isValidId(req, res, next) {
     return next()
   next(new Error('Invalid ID'))
 }
-//input validation. Validates only if the input has a title and URL
+//input validation
 function validSticker(sticker){
   const hasTitle = typeof sticker.title == 'string' && sticker.title.trim()!= '';
+  const hasDescription = typeof sticker.description == 'string' && sticker.description.trim()!= '';
+  const hasRating = !isNaN(sticker.rating);
   const hasURL = typeof sticker.url == 'string' && sticker.url.trim()!= '';
-  return hasTitle && hasURL
+  return hasTitle && hasDescription && hasRating && hasURL
 }
 
 //returns all records from the database
@@ -42,7 +44,7 @@ router.post('/',  (req, res, next) => {
       //save it to the database
       queries.create(req.body)
       .then((sticker) => {
-        res.status(201).json(sticker[0])
+        res.status(201).json(sticker[0]) //it returns an array and gets the new entry from the first position
       })
 
 
@@ -50,6 +52,22 @@ router.post('/',  (req, res, next) => {
       //display error
       next(new Error('Invalid sticker'));
     }
+})
+
+//UPDATE request
+router.put('/:id', isValidId, (req, res, next) => {
+  console.log(req.body)
+  if(validSticker(req.body)) {
+    //update sticker
+    queries.update(req.params.id, req.body) //the update will take the ID and apply the updates to the body
+    .then((sticker) => {
+      res.status(201).json(sticker[0])
+    })
+  } else {
+    //display error
+    next(new Error('Invalid sticker'));
+  }
+
 })
 
 module.exports = router;

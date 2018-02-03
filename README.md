@@ -288,7 +288,7 @@ it('Displays all stickers', (done) => {
 ```
 - run the test again
 
-### Showing one record with GET request
+### READ one record with GET request
 
 - add new route to the api's 'sticker.js'
 ```
@@ -360,7 +360,7 @@ it('Displays another sticker by different id', (done) => {
 ```
 
 
-### Saving - adding a new sticker to the database
+### CREATE a new sticker in the database by using POST request
 
 - add new route to the api/stickers.js file
 ```
@@ -427,4 +427,29 @@ it('Creates a record', (done) => {
     done()
   })
 })
+```
+
+### UPDATE a record in the database by using PUT request
+- add a new route to the apu/stickers.js
+```
+router.put('/:id', isValidId, (req, res, next) => {
+  if(validSticker(req.body)) {
+    //update sticker
+    queries.update(req.params.id, req.body) //the update will take the ID and apply the updates to the body
+    .then((sticker) => {
+      res.status(201).json(sticker[0])
+    })
+  } else {
+    //display error
+    next(new Error('Invalid sticker'));
+  }
+
+})
+```
+- create a new query in the db/queries.js
+```
+update(id, sticker) {
+  //return a sticker where the requested ID is equal to the ID in the database and update that record
+  return knex('sticker').where('id', id).update(sticker)
+}
 ```

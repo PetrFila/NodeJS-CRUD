@@ -14,5 +14,9 @@ module.exports = {
   //creates a new instance in the database and returns array of stickers
   create(sticker) {
     return knex('sticker').insert(sticker,'*')
+  },
+  update(id, sticker) {
+    //return a sticker where the requested ID is equal to the ID in the database, update that record and return the entire database as an array
+    return knex('sticker').where('id', id).update(sticker, '*')
   }
 }
