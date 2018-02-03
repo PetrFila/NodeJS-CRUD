@@ -46,7 +46,16 @@ const stickers = [
     url: 'http://devstickers.com/assets/img/pro/4gem.png' }
   ]
 
+  const sticker =
+  {
+	  "title": "ms",
+    "description": "Microsoft Logo",
+    "rating": 10,
+    "url": "http://devstickers.com/assets/img/pro/n8vc.png"
+  }
+
 
 module.exports = {
-  stickers
+  stickers,
+  sticker
 }

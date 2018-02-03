@@ -393,3 +393,38 @@ create(sticker) {
   return knex('sticker').insert(sticker,'*')
 }
 ```
+
+##### Testing the POST - saving data functionality
+- create a new input mock data in the test/fixtures.js and update the export as well
+```
+const sticker =  
+{
+  "title": "ms",
+  "description": "Microsoft Logo",
+  "rating": 10,
+  "url": "http://devstickers.com/assets/img/pro/n8vc.png"
+}
+
+
+module.exports = {
+stickers,
+sticker
+}
+```
+- create a new test in the app.test.js
+```
+it('Creates a record', (done) => {
+  request(app)
+  .post('/api/v1/stickers/')
+  .send(fixtures.sticker)
+  .set('Accept', 'application/json')//this is the header coming back with the data
+  .expect('Content-Type', /json/)
+  .expect(201)
+  .then((response) => {
+    expect(response.body).to.be.a('object')
+    fixtures.sticker.id = response.body.id //
+    expect(response.body).to.deep.equal(fixtures.sticker)
+    done()
+  })
+})
+```
